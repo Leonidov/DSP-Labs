@@ -1,0 +1,27 @@
+# Windows default autosave extension
+*.asv
+
+# OSX / *nix default autosave extension
+*.m~
+
+# Compiled MEX binaries (all platforms)
+*.mex*
+
+# Simulink Code Generation
+slprj/
+
+# Simulink autosave extension
+.autosave
+
+
+# Windows System Files
+Thumbs.db
+desktop.ini
+
+# OS X System Files
+.DS_Store
+.Spotlight-V100
+.Trashes
+
+._*
+~$*
