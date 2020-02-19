@@ -8,20 +8,14 @@ N = length(ts);
 
 x = sin(2*pi*1000*ts) + 0.5*sin(2*pi*2000*ts+3*pi/4);
 
-% не хотите синус? Тогда вот господин Дирак:
+% функция Дирака:
 %x = zeros(N,1);
 %x(1) = 1;
 
 figure;
 plot(x); grid on;
 
-% Один отсчёт Фурье
-%X = 0;
-%for n = 1 : N
-%    X = X + x(n)*(cos(2*pi*(n-1)/N)-1i*sin(2*pi*(n-1)/N))
-%end
-
-% Все отсчёты
+% Считаем ДПФ "вручную"
 X = zeros(N,1);
 tic;
 for m = 1 : N
@@ -31,6 +25,7 @@ for m = 1 : N
 end
 toc
 
+% Считаем БПФ
 %tic;
 %X = fft(x);
 %toc
@@ -47,7 +42,7 @@ figure;
 stem(abs(X)); grid on;
 title('Амплитуда');
 
-% Дальше на слайд про модули ДПФ
+% Модули ДПФ
 
 Xm = 2*abs(X)/N;
 
@@ -55,24 +50,18 @@ figure;
 stem(Xm); grid on;
 title('Правильная амплитуда');
 
-% Дальше на слайд про частоты ДПФ
+% Частоты ДПФ
 
-f = zeros(N,1);
-for i = 1 : N
-    f(i) = (i-1)*Fs/N;
-end
+f = (0:N-1)*Fs/N;
 
 figure;
 stem(f, Xm); grid on;
 title('Правильная амплитуда и частота');
 
-%phi = atan2(imag(X),real(X))*180/pi;
+% Фаза ДПФ
+
 phi = angle(X)*180/pi;
 
 figure;
 stem(f, phi); grid on;
 title('Фаза');
-
-% Поговорить про свойства ДПФ
-
-% Вспомнить про господина Дирака (см. дельта-функцию выше)
