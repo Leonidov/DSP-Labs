@@ -3,40 +3,32 @@
 
 clear;
 
-Fs = 110;
-ts1 = 0 : 1/Fs : 10-1/Fs;
-ts2 = 0 : 1/Fs : 100-1/Fs;
-N1 = length(ts1);
-N2 = length(ts2);
-
+fs = 110;
+Ns = 25;
+ts = 0 : 1/fs : Ns*10-1/fs;
+N = length(ts);
 
 % Частоты основных гармоник в сигнале
-F1 = 13;
-F2 = 50;
+f1 = 13;
+f2 = 50;
 
-x1 = 0.4*sin(2*pi*F2*ts1) + ...
-    0.4*sin(2*pi*(F1-0.1)*ts1) + ...
-    0.5*sin(2*pi*F1*ts1) + ...
-    0.4*sin(2*pi*(F1+0.1)*ts1) + ...
-    0.4*sin(2*pi*F1*2*ts1) + ...
-    0.3*sin(2*pi*F1*3*ts1) + ...
-    3*randn(size(ts1)) + ...            %Белый шум
-    pinknoise(N1);                      %Фликкер-шум
+x = 0.4*sin(2*pi*f2*ts) + ...
+    0.4*sin(2*pi*(f1-0.1)*ts) + ...
+    0.5*sin(2*pi*f1*ts) + ...
+    0.4*sin(2*pi*(f1+0.1)*ts) + ...
+    0.4*sin(2*pi*f1*2*ts) + ...
+    0.3*sin(2*pi*f1*3*ts) + ...
+    3*randn(size(ts)) + ...            %Белый шум
+    pinknoise(N);                      %Фликкер-шум
+
+N1 = round(length(ts)/Ns);
+x1 = x(1:N1);                          %Один фрагмент сигнала
 
 figure;
 plot(x1); grid on;
 title('Исходный сигнал');
 
-x2 = 0.4*sin(2*pi*F2*ts2) + ...
-    0.4*sin(2*pi*(F1-0.1)*ts2) + ...
-    0.5*sin(2*pi*F1*ts2) + ...
-    0.4*sin(2*pi*(F1+0.1)*ts2) + ...
-    0.4*sin(2*pi*F1*2*ts2) + ...
-    0.3*sin(2*pi*F1*3*ts2) + ...
-    3*randn(size(ts2)) + ...            %Белый шум
-    pinknoise(N2);                      %Фликкер-шум
-
-F = (0 : N1-1)*Fs/N1;
+F = (0 : N1-1)*fs/N1;
 
 X = abs(fft(x1))*2/N1;
 
@@ -63,14 +55,14 @@ title('ДПФ сигнала, взвешенного окном Блэкмана
 
 Nseg = 1000;
 Xsum = zeros(1,Nseg);
-for i =1 : N2/Nseg
-    xtmp = x2( (i-1)*Nseg+1 : (i-1)*Nseg+Nseg ).* blackman(Nseg)';
+for i =1 : N/Nseg
+    xtmp = x( (i-1)*Nseg+1 : (i-1)*Nseg+Nseg ).* blackman(Nseg)';
     Xsum = Xsum + abs(fft(xtmp))*2/Nseg;   
 end
 
-Xsum = Xsum/(N2/Nseg);
-Fsum = (0 : Nseg-1)*Fs/Nseg;
+Xsum = Xsum/(N/Nseg);
+fsum = (0 : Nseg-1)*fs/Nseg;
 
 figure;
-plot(Fsum(1:Nseg/2),Xsum(1:Nseg/2)); grid on;
+plot(fsum(1:Nseg/2),Xsum(1:Nseg/2)); grid on;
 title('Усреднённое ДПФ');

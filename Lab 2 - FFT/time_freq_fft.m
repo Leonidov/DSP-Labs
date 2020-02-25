@@ -35,11 +35,12 @@ X = fft(x);
 subplot(2,2,4);
 stem(abs(X)); grid on;
 
-[WX,freq] = wft(x,Fs,'f0',0.5);
+[WX,freq] = wft(x,Fs,'f0',0.05);
 %f0 = 0.01 .. 0.5
 
 figure;
 srf = surf(ts, freq, abs(WX));
 set(srf, 'LineStyle', 'none');
+xlabel('Время'); ylabel('Частота'); zlabel('Амплитуда');
 
 %cwt(x,Fs);
